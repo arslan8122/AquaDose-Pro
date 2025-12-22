@@ -19,13 +19,14 @@ export const AdConfig = {
   ENABLE_BANNER_ADS: true,
   ENABLE_INTERSTITIAL_ADS: true,
   ENABLE_REWARDED_ADS: true,
+  ENABLE_NATIVE_ADS: true,
 
   // Environment-specific settings
   USE_TEST_ADS: __DEV__, // Automatically use test ads in development
 
   // Ad frequency controls
-  INTERSTITIAL_FREQUENCY: 3, // Show after every X calculations
-  INTERSTITIAL_MIN_INTERVAL_MINUTES: 3, // Minimum time between interstitials
+  INTERSTITIAL_FREQUENCY: 2, // Show after every X navigation actions (back button clicks)
+  INTERSTITIAL_MIN_INTERVAL_MINUTES: 1, // Minimum time between interstitials (in minutes)
 
   // Ad Unit IDs (Production)
   // TODO: Replace these with your actual AdMob Unit IDs from Google AdMob console
@@ -35,6 +36,8 @@ export const AdConfig = {
   PROD_INTERSTITIAL_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
   PROD_REWARDED_AD_ID_IOS: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
   PROD_REWARDED_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
+  PROD_NATIVE_AD_ID_IOS: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
+  PROD_NATIVE_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
 
   // Test Ad Unit IDs (Google's official test IDs)
   TEST_BANNER_AD_ID_IOS: 'ca-app-pub-3940256099942544/2934735716',
@@ -43,6 +46,8 @@ export const AdConfig = {
   TEST_INTERSTITIAL_AD_ID_ANDROID: 'ca-app-pub-3940256099942544/1033173712',
   TEST_REWARDED_AD_ID_IOS: 'ca-app-pub-3940256099942544/1712485313',
   TEST_REWARDED_AD_ID_ANDROID: 'ca-app-pub-3940256099942544/5224354917',
+  TEST_NATIVE_AD_ID_IOS: 'ca-app-pub-3940256099942544/3986624511',
+  TEST_NATIVE_AD_ID_ANDROID: 'ca-app-pub-3940256099942544/2247696110',
 };
 
 /**

@@ -119,10 +119,44 @@ export const useInterstitialAd = () => {
     }
   }, [interstitial, isLoaded]);
 
+  /**
+   * Show interstitial on navigation (e.g., back button)
+   * Uses frequency caps but is triggered by navigation, not calculations
+   */
+  const showOnNavigation = useCallback(async () => {
+    if (!AdConfig.ENABLE_ADS || !AdConfig.ENABLE_INTERSTITIAL_ADS) {
+      return;
+    }
+
+    // Check if premium is active
+    const premium = await isPremiumActive();
+    if (premium) {
+      console.log('[InterstitialAd] Premium active, skipping ad');
+      return;
+    }
+
+    // Increment count and check if we should show (respects frequency)
+    const shouldShow = await incrementCalculationCount();
+
+    if (shouldShow && interstitial && isLoaded) {
+      try {
+        console.log('[InterstitialAd] Showing ad on navigation');
+        await interstitial.show();
+      } catch (error) {
+        console.log('[InterstitialAd] Error showing ad:', error);
+      }
+    } else if (!isLoaded) {
+      console.log('[InterstitialAd] Ad not loaded yet, skipping');
+    } else {
+      console.log('[InterstitialAd] Frequency cap not met, skipping');
+    }
+  }, [interstitial, isLoaded]);
+
   return {
     isLoaded,
     isLoading,
     showAfterCalculation,
+    showOnNavigation,
     show,
   };
 };

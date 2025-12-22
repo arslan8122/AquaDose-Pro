@@ -4,13 +4,16 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
+  ScrollView,
   TouchableOpacity,
   Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AnimatedButton from '../components/AnimatedButton';
 import BannerAd from '../components/BannerAd';
+import NativeAd from '../components/NativeAd';
 import {colors, spacing, typography, borderRadius, shadows} from '../constants/theme';
+import {useInterstitialAd} from '../hooks/useInterstitialAd';
 import FertilizerCalculator from './calculators/FertilizerCalculator';
 import MedicationCalculator from './calculators/MedicationCalculator';
 import ConditionerCalculator from './calculators/ConditionerCalculator';
@@ -20,9 +23,19 @@ type CalculatorType = 'fertilizer' | 'medication' | 'conditioner' | 'salinity' |
 
 const CalculatorScreen = () => {
   const [selectedCalculator, setSelectedCalculator] = useState<CalculatorType>(null);
-  const fadeAnim = new Animated.Value(0);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const fadeAnim = new Animated.Value(1); // Start visible
+  const {showOnNavigation} = useInterstitialAd();
 
   useEffect(() => {
+    if (isFirstLoad) {
+      // Skip animation on first load
+      setIsFirstLoad(false);
+      return;
+    }
+
+    // Reset and animate on subsequent changes
+    fadeAnim.setValue(0);
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 300,
@@ -30,65 +43,79 @@ const CalculatorScreen = () => {
     }).start();
   }, [selectedCalculator]);
 
+  const handleBackToHome = () => {
+    // Show interstitial ad when going back to home
+    showOnNavigation();
+    setSelectedCalculator(null);
+  };
+
   const renderCalculatorSelector = () => (
-    <Animated.View style={[styles.container, {opacity: fadeAnim}]}>
-      <View style={styles.header}>
-        <Text style={styles.title}>AquaDose Calculator</Text>
-        <Text style={styles.subtitle}>
-          Select a calculator type to get started
-        </Text>
-      </View>
-
-      <View style={styles.selectorContainer}>
-        <AnimatedButton
-          style={[styles.calculatorCard, styles.fertilizerCard]}
-          onPress={() => setSelectedCalculator('fertilizer')}>
-          <View style={styles.cardIcon}>
-            <Icon name="leaf" size={40} color="#06D6A0" />
-          </View>
-          <Text style={styles.cardTitle}>Fertilizer Dosing</Text>
-          <Text style={styles.cardDescription}>
-            Calculate precise NPK and micronutrient dosing for planted tanks
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={false}>
+      <Animated.View style={{opacity: fadeAnim}}>
+        <View style={styles.header}>
+          <Text style={styles.title}>AquaDose Calculator</Text>
+          <Text style={styles.subtitle}>
+            Select a calculator type to get started
           </Text>
-        </AnimatedButton>
+        </View>
 
-        <AnimatedButton
-          style={[styles.calculatorCard, styles.medicationCard]}
-          onPress={() => setSelectedCalculator('medication')}>
-          <View style={styles.cardIcon}>
-            <Icon name="pill" size={40} color="#E63946" />
-          </View>
-          <Text style={styles.cardTitle}>Medication Dosing</Text>
-          <Text style={styles.cardDescription}>
-            Precise medication dosing for treating fish diseases
-          </Text>
-        </AnimatedButton>
+        <View style={styles.selectorContainer}>
+          <AnimatedButton
+            style={[styles.calculatorCard, styles.fertilizerCard]}
+            onPress={() => setSelectedCalculator('fertilizer')}>
+            <View style={styles.cardIcon}>
+              <Icon name="leaf" size={40} color="#06D6A0" />
+            </View>
+            <Text style={styles.cardTitle}>Fertilizer Dosing</Text>
+            <Text style={styles.cardDescription}>
+              Calculate precise NPK and micronutrient dosing for planted tanks
+            </Text>
+          </AnimatedButton>
 
-        <AnimatedButton
-          style={[styles.calculatorCard, styles.conditionerCard]}
-          onPress={() => setSelectedCalculator('conditioner')}>
-          <View style={styles.cardIcon}>
-            <Icon name="water" size={40} color="#0077BE" />
-          </View>
-          <Text style={styles.cardTitle}>Water Conditioner</Text>
-          <Text style={styles.cardDescription}>
-            Calculate conditioner needed for water changes
-          </Text>
-        </AnimatedButton>
+          <AnimatedButton
+            style={[styles.calculatorCard, styles.medicationCard]}
+            onPress={() => setSelectedCalculator('medication')}>
+            <View style={styles.cardIcon}>
+              <Icon name="pill" size={40} color="#E63946" />
+            </View>
+            <Text style={styles.cardTitle}>Medication Dosing</Text>
+            <Text style={styles.cardDescription}>
+              Precise medication dosing for treating fish diseases
+            </Text>
+          </AnimatedButton>
 
-        <AnimatedButton
-          style={[styles.calculatorCard, styles.salinityCard]}
-          onPress={() => setSelectedCalculator('salinity')}>
-          <View style={styles.cardIcon}>
-            <Icon name="waves" size={40} color="#00A676" />
-          </View>
-          <Text style={styles.cardTitle}>Salinity Adjustment</Text>
-          <Text style={styles.cardDescription}>
-            Calculate salt additions for marine and brackish tanks
-          </Text>
-        </AnimatedButton>
-      </View>
-    </Animated.View>
+          {/* Native Ad between tiles */}
+          <NativeAd />
+
+          <AnimatedButton
+            style={[styles.calculatorCard, styles.conditionerCard]}
+            onPress={() => setSelectedCalculator('conditioner')}>
+            <View style={styles.cardIcon}>
+              <Icon name="water" size={40} color="#0077BE" />
+            </View>
+            <Text style={styles.cardTitle}>Water Conditioner</Text>
+            <Text style={styles.cardDescription}>
+              Calculate conditioner needed for water changes
+            </Text>
+          </AnimatedButton>
+
+          <AnimatedButton
+            style={[styles.calculatorCard, styles.salinityCard]}
+            onPress={() => setSelectedCalculator('salinity')}>
+            <View style={styles.cardIcon}>
+              <Icon name="waves" size={40} color="#00A676" />
+            </View>
+            <Text style={styles.cardTitle}>Salinity Adjustment</Text>
+            <Text style={styles.cardDescription}>
+              Calculate salt additions for marine and brackish tanks
+            </Text>
+          </AnimatedButton>
+        </View>
+      </Animated.View>
+    </ScrollView>
   );
 
   const renderSelectedCalculator = () => {
@@ -114,7 +141,7 @@ const CalculatorScreen = () => {
             <View style={styles.backHeader}>
               <TouchableOpacity
                 style={styles.backButton}
-                onPress={() => setSelectedCalculator(null)}>
+                onPress={handleBackToHome}>
                 <Icon name="arrow-left" size={20} color={colors.primary} />
                 <Text style={styles.backButtonText}>Back</Text>
               </TouchableOpacity>
@@ -125,7 +152,8 @@ const CalculatorScreen = () => {
           renderCalculatorSelector()
         )}
       </View>
-      <BannerAd />
+      {/* Only show banner ad when a calculator is selected */}
+      {selectedCalculator && <BannerAd />}
     </SafeAreaView>
   );
 };
@@ -134,6 +162,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  scrollContent: {
+    paddingBottom: 80, // Space for banner ad
   },
   header: {
     padding: spacing.lg,

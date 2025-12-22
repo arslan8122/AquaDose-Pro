@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert} from 'react-native';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPicker from '../../components/CustomPicker';
 import ResultCard from '../../components/ResultCard';
@@ -7,7 +7,6 @@ import InfoBox from '../../components/InfoBox';
 import {calculateMedicationDosing, MedicationInputs} from '../../utils/calculators';
 import {colors, spacing, typography, borderRadius} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
-import {useInterstitialAd} from '../../hooks/useInterstitialAd';
 
 // Common medications with their dosage rates
 const COMMON_MEDICATIONS = [
@@ -20,17 +19,22 @@ const COMMON_MEDICATIONS = [
 
 const MedicationCalculator = () => {
   const {addCalculation} = useApp();
-  const {showAfterCalculation} = useInterstitialAd();
+  const scrollViewRef = useRef<ScrollView>(null);
   const [tankVolume, setTankVolume] = useState('');
   const [volumeUnit, setVolumeUnit] = useState<'gallons' | 'liters'>('gallons');
   const [medicationStrength, setMedicationStrength] = useState('');
   const [dosagePerGallon, setDosagePerGallon] = useState('');
   const [treatmentDays, setTreatmentDays] = useState('7');
   const [result, setResult] = useState<any>(null);
+  const [selectedMedication, setSelectedMedication] = useState<string>('');
 
-  const handleMedicationSelect = (dosage: number) => {
+  const handleMedicationSelect = (label: string, dosage: number) => {
+    setSelectedMedication(label);
     if (dosage > 0) {
       setDosagePerGallon(dosage.toString());
+    } else {
+      // Clear dosage for custom option
+      setDosagePerGallon('');
     }
   };
 
@@ -46,8 +50,10 @@ const MedicationCalculator = () => {
     const calculationResult = calculateMedicationDosing(inputs);
     setResult(calculationResult);
 
-    // Show interstitial ad after calculation
-    showAfterCalculation();
+    // Auto-scroll to result
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({animated: true});
+    }, 100);
   };
 
   const handleSave = () => {
@@ -64,13 +70,23 @@ const MedicationCalculator = () => {
         result: result.formattedDosage,
         notes: result.instructions,
       });
+
+      Alert.alert(
+        'Saved Successfully',
+        'Your calculation has been saved to History.',
+        [{text: 'OK'}]
+      );
     }
   };
 
   const isFormValid = tankVolume && medicationStrength && dosagePerGallon && treatmentDays;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      ref={scrollViewRef}
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
         <Text style={styles.title}>Medication Dosing Calculator</Text>
         <Text style={styles.description}>
@@ -93,14 +109,14 @@ const MedicationCalculator = () => {
                 key={med.label}
                 style={[
                   styles.medicationButton,
-                  dosagePerGallon === med.dosage.toString() &&
+                  selectedMedication === med.label &&
                     styles.medicationButtonActive,
                 ]}
-                onPress={() => handleMedicationSelect(med.dosage)}>
+                onPress={() => handleMedicationSelect(med.label, med.dosage)}>
                 <Text
                   style={[
                     styles.medicationButtonText,
-                    dosagePerGallon === med.dosage.toString() &&
+                    selectedMedication === med.label &&
                       styles.medicationButtonTextActive,
                   ]}>
                   {med.label}
@@ -177,6 +193,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  scrollContent: {
+    paddingBottom: 80, // Space for banner ad
   },
   content: {
     padding: spacing.lg,

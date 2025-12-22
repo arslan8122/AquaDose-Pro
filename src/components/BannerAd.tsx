@@ -20,6 +20,11 @@ const BannerAd: React.FC<BannerAdProps> = ({style}) => {
 
   useEffect(() => {
     checkIfShouldShowAd();
+
+    // Re-check premium status every 5 seconds
+    const interval = setInterval(checkIfShouldShowAd, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const checkIfShouldShowAd = async () => {
@@ -32,6 +37,7 @@ const BannerAd: React.FC<BannerAdProps> = ({style}) => {
     // Check premium status
     const premium = await isPremiumActive();
     if (premium) {
+      console.log('[BannerAd] Premium active, hiding ad');
       setShowAd(false);
       return;
     }

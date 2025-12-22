@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert} from 'react-native';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPicker from '../../components/CustomPicker';
 import ResultCard from '../../components/ResultCard';
@@ -7,7 +7,6 @@ import InfoBox from '../../components/InfoBox';
 import {calculateWaterConditioner, ConditionerInputs} from '../../utils/calculators';
 import {colors, spacing, typography, borderRadius} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
-import {useInterstitialAd} from '../../hooks/useInterstitialAd';
 
 // Common water conditioners with their dosage rates (ml per gallon)
 const COMMON_CONDITIONERS = [
@@ -20,7 +19,7 @@ const COMMON_CONDITIONERS = [
 
 const ConditionerCalculator = () => {
   const {addCalculation} = useApp();
-  const {showAfterCalculation} = useInterstitialAd();
+  const scrollViewRef = useRef<ScrollView>(null);
   const [tankVolume, setTankVolume] = useState('');
   const [volumeUnit, setVolumeUnit] = useState<'gallons' | 'liters'>('gallons');
   const [waterChangePercentage, setWaterChangePercentage] = useState('25');
@@ -44,8 +43,10 @@ const ConditionerCalculator = () => {
     const calculationResult = calculateWaterConditioner(inputs);
     setResult(calculationResult);
 
-    // Show interstitial ad after calculation
-    showAfterCalculation();
+    // Auto-scroll to result
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({animated: true});
+    }, 100);
   };
 
   const handleSave = () => {
@@ -61,13 +62,23 @@ const ConditionerCalculator = () => {
         result: result.formattedDosage,
         notes: result.instructions,
       });
+
+      Alert.alert(
+        'Saved Successfully',
+        'Your calculation has been saved to History.',
+        [{text: 'OK'}]
+      );
     }
   };
 
   const isFormValid = tankVolume && waterChangePercentage && conditionerDoseRate;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      ref={scrollViewRef}
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
         <Text style={styles.title}>Water Conditioner Calculator</Text>
         <Text style={styles.description}>
@@ -166,6 +177,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  scrollContent: {
+    paddingBottom: 80, // Space for banner ad
   },
   content: {
     padding: spacing.lg,

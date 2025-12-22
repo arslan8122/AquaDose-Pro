@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert} from 'react-native';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPicker from '../../components/CustomPicker';
 import ResultCard from '../../components/ResultCard';
@@ -7,7 +7,6 @@ import InfoBox from '../../components/InfoBox';
 import {calculateFertilizerDosing, FertilizerInputs} from '../../utils/calculators';
 import {colors, spacing, typography, borderRadius} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
-import {useInterstitialAd} from '../../hooks/useInterstitialAd';
 
 // Tank size presets
 const TANK_SIZES = [
@@ -22,7 +21,7 @@ const TANK_SIZES = [
 
 const FertilizerCalculator = () => {
   const {addCalculation} = useApp();
-  const {showAfterCalculation} = useInterstitialAd();
+  const scrollViewRef = useRef<ScrollView>(null);
   const [tankVolume, setTankVolume] = useState('');
   const [volumeUnit, setVolumeUnit] = useState<'gallons' | 'liters'>('gallons');
   const [desiredPPM, setDesiredPPM] = useState('');
@@ -48,8 +47,10 @@ const FertilizerCalculator = () => {
     const calculationResult = calculateFertilizerDosing(inputs);
     setResult(calculationResult);
 
-    // Show interstitial ad after calculation (respects frequency caps)
-    showAfterCalculation();
+    // Auto-scroll to result after a short delay
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({animated: true});
+    }, 100);
   };
 
   const handleSave = () => {
@@ -66,13 +67,24 @@ const FertilizerCalculator = () => {
         result: result.formattedDosage,
         notes: result.instructions,
       });
+
+      // Show success message
+      Alert.alert(
+        'Saved Successfully',
+        'Your calculation has been saved to History.',
+        [{text: 'OK'}]
+      );
     }
   };
 
   const isFormValid = tankVolume && desiredPPM && productConcentration;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      ref={scrollViewRef}
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
         <Text style={styles.title}>Fertilizer Dosing Calculator</Text>
         <Text style={styles.description}>
@@ -180,6 +192,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  scrollContent: {
+    paddingBottom: 80, // Space for banner ad
   },
   content: {
     padding: spacing.lg,

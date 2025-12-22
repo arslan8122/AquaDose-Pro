@@ -7,6 +7,7 @@ import InfoBox from '../../components/InfoBox';
 import {calculateMedicationDosing, MedicationInputs} from '../../utils/calculators';
 import {colors, spacing, typography, borderRadius} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
+import {useInterstitialAd} from '../../hooks/useInterstitialAd';
 
 // Common medications with their dosage rates
 const COMMON_MEDICATIONS = [
@@ -19,6 +20,7 @@ const COMMON_MEDICATIONS = [
 
 const MedicationCalculator = () => {
   const {addCalculation} = useApp();
+  const {showAfterCalculation} = useInterstitialAd();
   const [tankVolume, setTankVolume] = useState('');
   const [volumeUnit, setVolumeUnit] = useState<'gallons' | 'liters'>('gallons');
   const [medicationStrength, setMedicationStrength] = useState('');
@@ -43,6 +45,9 @@ const MedicationCalculator = () => {
 
     const calculationResult = calculateMedicationDosing(inputs);
     setResult(calculationResult);
+
+    // Show interstitial ad after calculation
+    showAfterCalculation();
   };
 
   const handleSave = () => {

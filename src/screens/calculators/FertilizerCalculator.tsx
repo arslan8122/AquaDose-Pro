@@ -7,6 +7,7 @@ import InfoBox from '../../components/InfoBox';
 import {calculateFertilizerDosing, FertilizerInputs} from '../../utils/calculators';
 import {colors, spacing, typography, borderRadius} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
+import {useInterstitialAd} from '../../hooks/useInterstitialAd';
 
 // Tank size presets
 const TANK_SIZES = [
@@ -21,6 +22,7 @@ const TANK_SIZES = [
 
 const FertilizerCalculator = () => {
   const {addCalculation} = useApp();
+  const {showAfterCalculation} = useInterstitialAd();
   const [tankVolume, setTankVolume] = useState('');
   const [volumeUnit, setVolumeUnit] = useState<'gallons' | 'liters'>('gallons');
   const [desiredPPM, setDesiredPPM] = useState('');
@@ -45,6 +47,9 @@ const FertilizerCalculator = () => {
 
     const calculationResult = calculateFertilizerDosing(inputs);
     setResult(calculationResult);
+
+    // Show interstitial ad after calculation (respects frequency caps)
+    showAfterCalculation();
   };
 
   const handleSave = () => {

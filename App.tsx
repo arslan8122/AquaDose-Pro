@@ -3,7 +3,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -11,6 +11,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppProvider} from './src/context/AppContext';
 import {colors} from './src/constants/theme';
+import {initializeAds} from './src/services/adService';
 
 // Screens
 import CalculatorScreen from './src/screens/CalculatorScreen';
@@ -20,6 +21,11 @@ import SettingsScreen from './src/screens/SettingsScreen';
 const Tab = createBottomTabNavigator();
 
 function App() {
+  // Initialize ads on app startup
+  useEffect(() => {
+    initializeAds();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <AppProvider>

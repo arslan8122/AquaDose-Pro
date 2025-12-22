@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AnimatedButton from '../components/AnimatedButton';
+import BannerAd from '../components/BannerAd';
 import {colors, spacing, typography, borderRadius, shadows} from '../constants/theme';
 import FertilizerCalculator from './calculators/FertilizerCalculator';
 import MedicationCalculator from './calculators/MedicationCalculator';
@@ -107,21 +108,24 @@ const CalculatorScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {selectedCalculator ? (
-        <Animated.View style={[styles.calculatorWrapper, {opacity: fadeAnim}]}>
-          <View style={styles.backHeader}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => setSelectedCalculator(null)}>
-              <Icon name="arrow-left" size={20} color={colors.primary} />
-              <Text style={styles.backButtonText}>Back</Text>
-            </TouchableOpacity>
-          </View>
-          {renderSelectedCalculator()}
-        </Animated.View>
-      ) : (
-        renderCalculatorSelector()
-      )}
+      <View style={{flex: 1}}>
+        {selectedCalculator ? (
+          <Animated.View style={[styles.calculatorWrapper, {opacity: fadeAnim}]}>
+            <View style={styles.backHeader}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => setSelectedCalculator(null)}>
+                <Icon name="arrow-left" size={20} color={colors.primary} />
+                <Text style={styles.backButtonText}>Back</Text>
+              </TouchableOpacity>
+            </View>
+            {renderSelectedCalculator()}
+          </Animated.View>
+        ) : (
+          renderCalculatorSelector()
+        )}
+      </View>
+      <BannerAd />
     </SafeAreaView>
   );
 };

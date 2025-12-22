@@ -7,6 +7,7 @@ import InfoBox from '../../components/InfoBox';
 import {calculateWaterConditioner, ConditionerInputs} from '../../utils/calculators';
 import {colors, spacing, typography, borderRadius} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
+import {useInterstitialAd} from '../../hooks/useInterstitialAd';
 
 // Common water conditioners with their dosage rates (ml per gallon)
 const COMMON_CONDITIONERS = [
@@ -19,6 +20,7 @@ const COMMON_CONDITIONERS = [
 
 const ConditionerCalculator = () => {
   const {addCalculation} = useApp();
+  const {showAfterCalculation} = useInterstitialAd();
   const [tankVolume, setTankVolume] = useState('');
   const [volumeUnit, setVolumeUnit] = useState<'gallons' | 'liters'>('gallons');
   const [waterChangePercentage, setWaterChangePercentage] = useState('25');
@@ -41,6 +43,9 @@ const ConditionerCalculator = () => {
 
     const calculationResult = calculateWaterConditioner(inputs);
     setResult(calculationResult);
+
+    // Show interstitial ad after calculation
+    showAfterCalculation();
   };
 
   const handleSave = () => {

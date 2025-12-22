@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -20,12 +20,20 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   containerStyle,
   ...textInputProps
 }) => {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <View style={[styles.container, containerStyle]}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
-        style={[styles.input, error ? styles.inputError : null]}
+        style={[
+          styles.input,
+          error ? styles.inputError : null,
+          isFocused ? styles.inputFocused : null,
+        ]}
         placeholderTextColor={colors.textLight}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         {...textInputProps}
       />
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -45,12 +53,16 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: colors.surface,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.border,
     borderRadius: borderRadius.md,
     padding: spacing.md,
     ...typography.body,
     color: colors.text,
+  },
+  inputFocused: {
+    borderColor: colors.primary,
+    backgroundColor: colors.background,
   },
   inputError: {
     borderColor: colors.error,

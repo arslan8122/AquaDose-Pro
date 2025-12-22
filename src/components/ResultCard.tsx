@@ -1,5 +1,6 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Alert, Animated} from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {colors, spacing, typography, borderRadius, shadows} from '../constants/theme';
 
 interface ResultCardProps {
@@ -19,8 +20,28 @@ const ResultCard: React.FC<ResultCardProps> = ({
   onSave,
   onCopy,
 }) => {
+  const slideAnim = useRef(new Animated.Value(50)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   const handleCopy = () => {
-    // Note: Clipboard functionality will be added with expo-clipboard
+    const textToCopy = `${title}\n\nDosage: ${result}\n\nInstructions:\n${instructions}`;
+    Clipboard.setString(textToCopy);
+
     if (onCopy) {
       onCopy();
     }
@@ -29,15 +50,30 @@ const ResultCard: React.FC<ResultCardProps> = ({
 
   if (error) {
     return (
-      <View style={[styles.card, styles.errorCard]}>
+      <Animated.View
+        style={[
+          styles.card,
+          styles.errorCard,
+          {
+            opacity: fadeAnim,
+            transform: [{translateY: slideAnim}],
+          },
+        ]}>
         <Text style={styles.errorTitle}>Error</Text>
         <Text style={styles.errorText}>{error}</Text>
-      </View>
+      </Animated.View>
     );
   }
 
   return (
-    <View style={styles.card}>
+    <Animated.View
+      style={[
+        styles.card,
+        {
+          opacity: fadeAnim,
+          transform: [{translateY: slideAnim}],
+        },
+      ]}>
       <Text style={styles.title}>{title}</Text>
 
       <View style={styles.resultContainer}>
@@ -57,13 +93,11 @@ const ResultCard: React.FC<ResultCardProps> = ({
           </TouchableOpacity>
         )}
 
-        {onCopy && (
-          <TouchableOpacity style={styles.secondaryButton} onPress={handleCopy}>
-            <Text style={styles.secondaryButtonText}>Copy Result</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity style={styles.secondaryButton} onPress={handleCopy}>
+          <Text style={styles.secondaryButtonText}>Copy Result</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

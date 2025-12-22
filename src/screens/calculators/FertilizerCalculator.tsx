@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPicker from '../../components/CustomPicker';
 import ResultCard from '../../components/ResultCard';
+import InfoBox from '../../components/InfoBox';
 import {calculateFertilizerDosing, FertilizerInputs} from '../../utils/calculators';
 import {colors, spacing, typography, borderRadius} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
@@ -73,6 +74,12 @@ const FertilizerCalculator = () => {
           Calculate precise fertilizer dosing for your planted tank based on desired PPM
           and product concentration.
         </Text>
+
+        <InfoBox
+          title="What is PPM?"
+          message="PPM (Parts Per Million) measures nutrient concentration in water. Common targets: Nitrates (10-20 ppm), Phosphates (1-2 ppm), Potassium (10-30 ppm)."
+          type="info"
+        />
 
         {/* Tank Size Presets */}
         <View style={styles.presetsContainer}>

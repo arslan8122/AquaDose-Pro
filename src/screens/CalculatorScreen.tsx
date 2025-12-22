@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AnimatedButton from '../components/AnimatedButton';
 import {colors, spacing, typography, borderRadius, shadows} from '../constants/theme';
 import FertilizerCalculator from './calculators/FertilizerCalculator';
 import MedicationCalculator from './calculators/MedicationCalculator';
@@ -16,9 +19,18 @@ type CalculatorType = 'fertilizer' | 'medication' | 'conditioner' | 'salinity' |
 
 const CalculatorScreen = () => {
   const [selectedCalculator, setSelectedCalculator] = useState<CalculatorType>(null);
+  const fadeAnim = new Animated.Value(0);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, [selectedCalculator]);
 
   const renderCalculatorSelector = () => (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, {opacity: fadeAnim}]}>
       <View style={styles.header}>
         <Text style={styles.title}>AquaDose Calculator</Text>
         <Text style={styles.subtitle}>
@@ -27,55 +39,55 @@ const CalculatorScreen = () => {
       </View>
 
       <View style={styles.selectorContainer}>
-        <TouchableOpacity
+        <AnimatedButton
           style={[styles.calculatorCard, styles.fertilizerCard]}
           onPress={() => setSelectedCalculator('fertilizer')}>
           <View style={styles.cardIcon}>
-            <Text style={styles.cardIconText}>🌱</Text>
+            <Icon name="leaf" size={40} color="#06D6A0" />
           </View>
           <Text style={styles.cardTitle}>Fertilizer Dosing</Text>
           <Text style={styles.cardDescription}>
             Calculate precise NPK and micronutrient dosing for planted tanks
           </Text>
-        </TouchableOpacity>
+        </AnimatedButton>
 
-        <TouchableOpacity
+        <AnimatedButton
           style={[styles.calculatorCard, styles.medicationCard]}
           onPress={() => setSelectedCalculator('medication')}>
           <View style={styles.cardIcon}>
-            <Text style={styles.cardIconText}>💊</Text>
+            <Icon name="pill" size={40} color="#E63946" />
           </View>
           <Text style={styles.cardTitle}>Medication Dosing</Text>
           <Text style={styles.cardDescription}>
             Precise medication dosing for treating fish diseases
           </Text>
-        </TouchableOpacity>
+        </AnimatedButton>
 
-        <TouchableOpacity
+        <AnimatedButton
           style={[styles.calculatorCard, styles.conditionerCard]}
           onPress={() => setSelectedCalculator('conditioner')}>
           <View style={styles.cardIcon}>
-            <Text style={styles.cardIconText}>💧</Text>
+            <Icon name="water" size={40} color="#0077BE" />
           </View>
           <Text style={styles.cardTitle}>Water Conditioner</Text>
           <Text style={styles.cardDescription}>
             Calculate conditioner needed for water changes
           </Text>
-        </TouchableOpacity>
+        </AnimatedButton>
 
-        <TouchableOpacity
+        <AnimatedButton
           style={[styles.calculatorCard, styles.salinityCard]}
           onPress={() => setSelectedCalculator('salinity')}>
           <View style={styles.cardIcon}>
-            <Text style={styles.cardIconText}>🌊</Text>
+            <Icon name="waves" size={40} color="#00A676" />
           </View>
           <Text style={styles.cardTitle}>Salinity Adjustment</Text>
           <Text style={styles.cardDescription}>
             Calculate salt additions for marine and brackish tanks
           </Text>
-        </TouchableOpacity>
+        </AnimatedButton>
       </View>
-    </View>
+    </Animated.View>
   );
 
   const renderSelectedCalculator = () => {
@@ -96,16 +108,17 @@ const CalculatorScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       {selectedCalculator ? (
-        <View style={styles.calculatorWrapper}>
+        <Animated.View style={[styles.calculatorWrapper, {opacity: fadeAnim}]}>
           <View style={styles.backHeader}>
             <TouchableOpacity
               style={styles.backButton}
               onPress={() => setSelectedCalculator(null)}>
-              <Text style={styles.backButtonText}>← Back</Text>
+              <Icon name="arrow-left" size={20} color={colors.primary} />
+              <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
           </View>
           {renderSelectedCalculator()}
-        </View>
+        </Animated.View>
       ) : (
         renderCalculatorSelector()
       )}
@@ -158,9 +171,6 @@ const styles = StyleSheet.create({
   cardIcon: {
     marginBottom: spacing.sm,
   },
-  cardIconText: {
-    fontSize: 32,
-  },
   cardTitle: {
     ...typography.h3,
     color: colors.text,
@@ -183,6 +193,7 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: spacing.xs,
   },
   backButtonText: {
     ...typography.body,

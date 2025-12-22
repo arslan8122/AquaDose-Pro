@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPicker from '../../components/CustomPicker';
 import ResultCard from '../../components/ResultCard';
+import InfoBox from '../../components/InfoBox';
 import {calculateMedicationDosing, MedicationInputs} from '../../utils/calculators';
 import {colors, spacing, typography, borderRadius} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
@@ -71,6 +72,12 @@ const MedicationCalculator = () => {
           Calculate precise medication dosing for treating fish diseases. Always follow
           product instructions and remove carbon filtration during treatment.
         </Text>
+
+        <InfoBox
+          title="⚠️ Important Safety Tips"
+          message="Always remove activated carbon from filters during treatment as it will absorb medication. Quarantine sick fish when possible to avoid medicating the entire tank."
+          type="warning"
+        />
 
         {/* Common Medications */}
         <View style={styles.medicationsContainer}>

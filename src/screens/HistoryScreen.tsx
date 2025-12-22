@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useApp} from '../context/AppContext';
 import {colors, spacing, typography, borderRadius, shadows} from '../constants/theme';
 
@@ -59,10 +60,12 @@ const HistoryScreen = () => {
 
       {calculations.length === 0 ? (
         <View style={styles.emptyContainer}>
+          <Icon name="clipboard-text-outline" size={80} color={colors.textLight} />
           <Text style={styles.emptyText}>No calculations saved yet</Text>
           <Text style={styles.emptySubtext}>
-            Your calculations will appear here
+            Calculate a dosage and tap "Save Calculation"
           </Text>
+          <Text style={styles.emptySubtext}>to see it here</Text>
         </View>
       ) : (
         <FlatList
@@ -144,13 +147,16 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
   },
   emptyText: {
-    ...typography.h3,
+    ...typography.h2,
     color: colors.textSecondary,
+    marginTop: spacing.lg,
     marginBottom: spacing.sm,
+    textAlign: 'center',
   },
   emptySubtext: {
     ...typography.body,
     color: colors.textLight,
+    textAlign: 'center',
   },
 });
 

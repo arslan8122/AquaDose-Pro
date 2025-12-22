@@ -8,6 +8,7 @@ import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppProvider} from './src/context/AppContext';
 import {colors} from './src/constants/theme';
 
@@ -51,6 +52,9 @@ function App() {
               component={CalculatorScreen}
               options={{
                 tabBarLabel: 'Calculator',
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="calculator" color={color} size={size} />
+                ),
               }}
             />
             <Tab.Screen
@@ -58,6 +62,9 @@ function App() {
               component={HistoryScreen}
               options={{
                 tabBarLabel: 'History',
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="history" color={color} size={size} />
+                ),
               }}
             />
             <Tab.Screen
@@ -65,6 +72,9 @@ function App() {
               component={SettingsScreen}
               options={{
                 tabBarLabel: 'Settings',
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="cog" color={color} size={size} />
+                ),
               }}
             />
           </Tab.Navigator>

@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPicker from '../../components/CustomPicker';
 import ResultCard from '../../components/ResultCard';
+import InfoBox from '../../components/InfoBox';
 import {calculateWaterConditioner, ConditionerInputs} from '../../utils/calculators';
 import {colors, spacing, typography, borderRadius} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
@@ -68,6 +69,12 @@ const ConditionerCalculator = () => {
           Calculate the exact amount of water conditioner needed for your water change.
           Protects fish from harmful chemicals in tap water.
         </Text>
+
+        <InfoBox
+          title="💡 Pro Tip"
+          message="Add water conditioner to new water BEFORE adding it to your tank. This neutralizes chlorine and chloramine immediately, protecting your fish and beneficial bacteria."
+          type="tip"
+        />
 
         {/* Common Conditioners */}
         <View style={styles.conditionersContainer}>

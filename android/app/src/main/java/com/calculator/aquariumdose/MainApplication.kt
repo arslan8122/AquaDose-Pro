@@ -1,4 +1,4 @@
-package com.aquadosepro
+package com.calculator.aquariumdose
 
 import android.app.Application
 import com.facebook.react.PackageList

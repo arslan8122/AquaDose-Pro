@@ -80,9 +80,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.aquadosepro"
+    namespace "com.calculator.aquariumdose"
     defaultConfig {
-        applicationId "com.aquadosepro"
+        applicationId "com.calculator.aquariumdose"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

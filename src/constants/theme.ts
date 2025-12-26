@@ -120,3 +120,9 @@ export const shadows = {
     elevation: 8,
   },
 };
+
+// Ad dimensions
+export const adSizes = {
+  bannerHeight: 60, // Anchored adaptive banner height
+  bannerPadding: 16, // Extra padding to ensure content doesn't touch ad
+};

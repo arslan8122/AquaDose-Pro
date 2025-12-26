@@ -13,14 +13,14 @@ export const __DEV__ = process.env.NODE_ENV === 'development';
  */
 export const AdConfig = {
   // Master switch for all ads
-  ENABLE_ADS: true, // Set to false to disable ALL ads globally
+  ENABLE_ADS: false, // Set to false to disable ALL ads globally
 
   // Individual ad type controls
-  ENABLE_BANNER_ADS: true,
-  ENABLE_INTERSTITIAL_ADS: true,
-  ENABLE_REWARDED_ADS: true,
-  ENABLE_NATIVE_ADS: true,
-
+  ENABLE_BANNER_ADS: false,
+  ENABLE_INTERSTITIAL_ADS: false,
+  ENABLE_REWARDED_ADS: false,
+  ENABLE_NATIVE_ADS: false,
+  ENABLE_APP_OPEN_ADS: false,
   // Environment-specific settings
   USE_TEST_ADS: __DEV__, // Automatically use test ads in development
 
@@ -38,6 +38,8 @@ export const AdConfig = {
   PROD_REWARDED_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
   PROD_NATIVE_AD_ID_IOS: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
   PROD_NATIVE_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
+  PROD_APP_OPEN_AD_ID_IOS: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
+  PROD_APP_OPEN_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
 
   // Test Ad Unit IDs (Google's official test IDs)
   TEST_BANNER_AD_ID_IOS: 'ca-app-pub-3940256099942544/2934735716',
@@ -111,7 +113,7 @@ export const isAnyAdEnabled = (): boolean => {
  */
 export const getAdUnitId = (
   adType: 'banner' | 'interstitial' | 'rewarded',
-  platform: 'ios' | 'android'
+  platform: 'ios' | 'android',
 ): string => {
   const isTest = AdConfig.USE_TEST_ADS;
 

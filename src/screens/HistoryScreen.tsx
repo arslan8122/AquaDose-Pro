@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useApp} from '../context/AppContext';
-import {colors, spacing, typography, borderRadius, shadows} from '../constants/theme';
+import {colors, spacing, typography, borderRadius, shadows, adSizes} from '../constants/theme';
+import BannerAd from '../components/BannerAd';
 
 const HistoryScreen = () => {
   const {calculations, loadCalculations, deleteCalculation} = useApp();
@@ -75,6 +76,7 @@ const HistoryScreen = () => {
           contentContainerStyle={styles.listContent}
         />
       )}
+      <BannerAd />
     </SafeAreaView>
   );
 };
@@ -100,6 +102,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: spacing.md,
+    paddingBottom: adSizes.bannerHeight + adSizes.bannerPadding + spacing.md, // Space for banner ad with gap
   },
   card: {
     backgroundColor: colors.cardBackground,

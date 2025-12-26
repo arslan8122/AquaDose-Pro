@@ -5,7 +5,7 @@ import CustomPicker from '../../components/CustomPicker';
 import ResultCard from '../../components/ResultCard';
 import InfoBox from '../../components/InfoBox';
 import {calculateWaterConditioner, ConditionerInputs} from '../../utils/calculators';
-import {colors, spacing, typography, borderRadius} from '../../constants/theme';
+import {colors, spacing, typography, borderRadius, adSizes} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
 
 // Common water conditioners with their dosage rates (ml per gallon)
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   scrollContent: {
-    paddingBottom: 80, // Space for banner ad
+    paddingBottom: adSizes.bannerHeight + adSizes.bannerPadding, // Space for banner ad with gap
   },
   content: {
     padding: spacing.lg,

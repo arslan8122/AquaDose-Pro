@@ -11,10 +11,11 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useApp} from '../context/AppContext';
-import {colors, spacing, typography, borderRadius, shadows} from '../constants/theme';
+import {colors, spacing, typography, borderRadius, shadows, adSizes} from '../constants/theme';
 import {useRewardedAd} from '../hooks/useRewardedAd';
 import {isPremiumActive, getRemainingPremiumTime} from '../services/adService';
 import {PremiumFeatures} from '../config/featureFlags';
+import BannerAd from '../components/BannerAd';
 
 const SettingsScreen = () => {
   const {clearAllCalculations} = useApp();
@@ -77,7 +78,9 @@ const SettingsScreen = () => {
         <Text style={styles.title}>Settings</Text>
       </View>
 
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Premium</Text>
 
@@ -148,7 +151,7 @@ const SettingsScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>About</Text>
           <View style={styles.card}>
-            <Text style={styles.appName}>AquaDose Pro</Text>
+            <Text style={styles.appName}>Aquarium Dose Calculator</Text>
             <Text style={styles.version}>Version 1.0.0</Text>
             <Text style={styles.description}>
               Precise dosing calculator for aquarium hobbyists. Calculate
@@ -185,6 +188,7 @@ const SettingsScreen = () => {
           </Text>
         </View>
       </ScrollView>
+      <BannerAd />
     </SafeAreaView>
   );
 };
@@ -204,6 +208,9 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: adSizes.bannerHeight + adSizes.bannerPadding, // Space for banner ad with gap
   },
   section: {
     padding: spacing.lg,

@@ -3,7 +3,7 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -14,6 +14,7 @@ import {colors} from './src/constants/theme';
 import {initializeAds} from './src/services/adService';
 
 // Screens
+import SplashScreen from './src/screens/SplashScreen';
 import CalculatorScreen from './src/screens/CalculatorScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
@@ -21,10 +22,30 @@ import SettingsScreen from './src/screens/SettingsScreen';
 const Tab = createBottomTabNavigator();
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
   // Initialize ads on app startup
   useEffect(() => {
     initializeAds();
   }, []);
+
+  // Handle splash screen completion
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+  };
+
+  // Show splash screen
+  if (showSplash) {
+    return (
+      <SafeAreaProvider>
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor={colors.background}
+        />
+        <SplashScreen onComplete={handleSplashComplete} />
+      </SafeAreaProvider>
+    );
+  }
 
   return (
     <SafeAreaProvider>

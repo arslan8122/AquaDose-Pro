@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AnimatedButton from '../components/AnimatedButton';
 import BannerAd from '../components/BannerAd';
 import NativeAd from '../components/NativeAd';
-import {colors, spacing, typography, borderRadius, shadows} from '../constants/theme';
+import {colors, spacing, typography, borderRadius, shadows, adSizes} from '../constants/theme';
 import {useInterstitialAd} from '../hooks/useInterstitialAd';
 import FertilizerCalculator from './calculators/FertilizerCalculator';
 import MedicationCalculator from './calculators/MedicationCalculator';
@@ -56,7 +56,7 @@ const CalculatorScreen = () => {
       showsVerticalScrollIndicator={false}>
       <Animated.View style={{opacity: fadeAnim}}>
         <View style={styles.header}>
-          <Text style={styles.title}>AquaDose Calculator</Text>
+          <Text style={styles.title}>Aquarium Dose Calculator</Text>
           <Text style={styles.subtitle}>
             Select a calculator type to get started
           </Text>
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   scrollContent: {
-    paddingBottom: 80, // Space for banner ad
+    paddingBottom: adSizes.bannerHeight + adSizes.bannerPadding, // Space for banner ad with gap
   },
   header: {
     padding: spacing.lg,

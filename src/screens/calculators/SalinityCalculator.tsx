@@ -4,7 +4,7 @@ import CustomTextInput from '../../components/CustomTextInput';
 import CustomPicker from '../../components/CustomPicker';
 import ResultCard from '../../components/ResultCard';
 import {calculateSalinity, SalinityInputs} from '../../utils/calculators';
-import {colors, spacing, typography, borderRadius} from '../../constants/theme';
+import {colors, spacing, typography, borderRadius, adSizes} from '../../constants/theme';
 import {useApp} from '../../context/AppContext';
 
 const SalinityCalculator = () => {
@@ -85,7 +85,9 @@ const SalinityCalculator = () => {
   const isFormValid = tankVolume && currentSalinity && targetSalinity;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}>
       <View style={styles.content}>
         <Text style={styles.title}>Salinity Calculator</Text>
         <Text style={styles.description}>
@@ -165,6 +167,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  scrollContent: {
+    paddingBottom: adSizes.bannerHeight + adSizes.bannerPadding, // Space for banner ad with gap
   },
   content: {
     padding: spacing.lg,

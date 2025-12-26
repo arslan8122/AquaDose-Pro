@@ -73,10 +73,27 @@ const BannerAd: React.FC<BannerAdProps> = ({style}) => {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
-    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E1EBF0',
+    paddingVertical: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
 });
 

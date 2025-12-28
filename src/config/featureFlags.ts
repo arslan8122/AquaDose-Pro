@@ -13,14 +13,14 @@ export const __DEV__ = process.env.NODE_ENV === 'development';
  */
 export const AdConfig = {
   // Master switch for all ads
-  ENABLE_ADS: false, // Set to false to disable ALL ads globally
+  ENABLE_ADS: true, // Set to false to disable ALL ads globally
 
   // Individual ad type controls
-  ENABLE_BANNER_ADS: false,
-  ENABLE_INTERSTITIAL_ADS: false,
-  ENABLE_REWARDED_ADS: false,
-  ENABLE_NATIVE_ADS: false,
-  ENABLE_APP_OPEN_ADS: false,
+  ENABLE_BANNER_ADS: true,
+  ENABLE_INTERSTITIAL_ADS: true,
+  ENABLE_REWARDED_ADS: true,
+  ENABLE_NATIVE_ADS: true,
+  ENABLE_APP_OPEN_ADS: true,
   // Environment-specific settings
   USE_TEST_ADS: __DEV__, // Automatically use test ads in development
 
@@ -31,15 +31,15 @@ export const AdConfig = {
   // Ad Unit IDs (Production)
   // TODO: Replace these with your actual AdMob Unit IDs from Google AdMob console
   PROD_BANNER_AD_ID_IOS: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
-  PROD_BANNER_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
+  PROD_BANNER_AD_ID_ANDROID: 'ca-app-pub-9052358374609916/7718943922',
   PROD_INTERSTITIAL_AD_ID_IOS: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
-  PROD_INTERSTITIAL_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
+  PROD_INTERSTITIAL_AD_ID_ANDROID: 'ca-app-pub-9052358374609916/1097695256',
   PROD_REWARDED_AD_ID_IOS: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
-  PROD_REWARDED_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
+  PROD_REWARDED_AD_ID_ANDROID: 'ca-app-pub-9052358374609916/5448822046',
   PROD_NATIVE_AD_ID_IOS: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
-  PROD_NATIVE_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
+  PROD_NATIVE_AD_ID_ANDROID: 'ca-app-pub-9052358374609916/5092780587',
   PROD_APP_OPEN_AD_ID_IOS: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
-  PROD_APP_OPEN_AD_ID_ANDROID: 'ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY',
+  PROD_APP_OPEN_AD_ID_ANDROID: 'ca-app-pub-9052358374609916/3779698916',
 
   // Test Ad Unit IDs (Google's official test IDs)
   TEST_BANNER_AD_ID_IOS: 'ca-app-pub-3940256099942544/2934735716',

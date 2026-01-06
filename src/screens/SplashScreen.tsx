@@ -23,11 +23,12 @@ interface SplashScreenProps {
 
 const SplashScreen: React.FC<SplashScreenProps> = ({onComplete}) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [adHandled, setAdHandled] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
-  const {showAd, isAdLoaded} = useAppOpenAd();
+  const {showAd, isAdLoaded, isAdLoading, isAdShowing} = useAppOpenAd();
 
   // Fade in and scale animation
   useEffect(() => {
@@ -65,31 +66,46 @@ const SplashScreen: React.FC<SplashScreenProps> = ({onComplete}) => {
     ).start();
   }, []);
 
-  // Handle loading completion
+  // Handle initial loading completion (minimum 2 seconds)
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // 2 seconds loading time
+    }, 2000); // 2 seconds minimum loading time
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Show ad when loading completes
+  // Show ad when initial loading completes and ad is ready
   useEffect(() => {
-    if (!isLoading) {
-      // Wait a moment before showing ad
-      const adTimer = setTimeout(async () => {
+    if (!isLoading && !adHandled && !isAdLoading) {
+      // Initial loading done and ad is loaded (or failed to load)
+      const handleAd = async () => {
         if (isAdLoaded) {
-          // Show the ad and wait for it to complete
+          // Show the ad if it's loaded
           await showAd();
+          setAdHandled(true);
+        } else {
+          // No ad available or ad failed to load
+          setAdHandled(true);
         }
-        // Navigate to main app after ad (or immediately if no ad)
+      };
+
+      handleAd();
+    }
+  }, [isLoading, isAdLoaded, isAdLoading, adHandled, showAd]);
+
+  // Navigate to main app after ad is shown or if no ad
+  useEffect(() => {
+    if (adHandled && !isAdShowing) {
+      // Ad has been handled (shown and closed, or not available)
+      // Navigate to main app
+      const timer = setTimeout(() => {
         onComplete();
       }, 300);
 
-      return () => clearTimeout(adTimer);
+      return () => clearTimeout(timer);
     }
-  }, [isLoading, isAdLoaded, showAd, onComplete]);
+  }, [adHandled, isAdShowing, onComplete]);
 
   return (
     <View style={styles.container}>
@@ -134,8 +150,8 @@ const SplashScreen: React.FC<SplashScreenProps> = ({onComplete}) => {
         Precise Dosing for Your Aquarium
       </Animated.Text>
 
-      {/* Loading Indicator */}
-      {isLoading && (
+      {/* Loading Indicator - Show while loading or ad is loading/showing */}
+      {(isLoading || isAdLoading || isAdShowing || !adHandled) && (
         <Animated.View
           style={[
             styles.loadingContainer,
@@ -145,7 +161,9 @@ const SplashScreen: React.FC<SplashScreenProps> = ({onComplete}) => {
             },
           ]}>
           <ActivityIndicator size="large" color={colors.primary} />
-          <Animated.Text style={styles.loadingText}>Loading...</Animated.Text>
+          <Animated.Text style={styles.loadingText}>
+            {isLoading ? 'Loading...' : 'Loading Ad...'}
+          </Animated.Text>
         </Animated.View>
       )}
     </View>

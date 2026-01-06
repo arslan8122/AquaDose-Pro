@@ -26,15 +26,18 @@ const getAdUnitId = (): string => {
 export const useAppOpenAd = () => {
   const [isAdLoaded, setIsAdLoaded] = useState(false);
   const [isAdShowing, setIsAdShowing] = useState(false);
+  const [isAdLoading, setIsAdLoading] = useState(true); // Track if ad is currently loading
   const adRef = useRef<AppOpenAd | null>(null);
   const hasShownAd = useRef(false); // Track if ad has been shown in this session
 
   // Load the ad
   useEffect(() => {
     if (!AdConfig.ENABLE_APP_OPEN_ADS || hasShownAd.current) {
+      setIsAdLoading(false); // No ad to load
       return;
     }
 
+    setIsAdLoading(true);
     const adUnitId = getAdUnitId();
     const appOpenAd = AppOpenAd.createForAdRequest(adUnitId, {
       requestNonPersonalizedAdsOnly: false,
@@ -46,6 +49,7 @@ export const useAppOpenAd = () => {
       () => {
         console.log('[AppOpenAd] Ad loaded successfully');
         setIsAdLoaded(true);
+        setIsAdLoading(false);
       }
     );
 
@@ -54,6 +58,7 @@ export const useAppOpenAd = () => {
       error => {
         console.error('[AppOpenAd] Failed to load ad:', error);
         setIsAdLoaded(false);
+        setIsAdLoading(false); // Stop loading on error
       }
     );
 
@@ -100,6 +105,7 @@ export const useAppOpenAd = () => {
   return {
     isAdLoaded,
     isAdShowing,
+    isAdLoading,
     showAd,
   };
 };
